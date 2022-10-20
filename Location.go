@@ -38,18 +38,19 @@ type Location struct {
 }
 
 type LocationsConfig struct {
-	Account  string
-	PageSize *int
-	Filter   *string
-	OrderBy  *string
-	ReadMask *string
+	AccountName string
+	PageSize    *int
+	Filter      *string
+	OrderBy     *string
+	ReadMask    *string
 }
 
 func (service *Service) Locations(config *LocationsConfig) (*[]Location, *errortools.Error) {
 	if config == nil {
 		return nil, errortools.ErrorMessage("LocationsConfig must not be nil")
 	}
-	var values url.Values
+
+	values := url.Values{}
 
 	if config.PageSize != nil {
 		values.Set("pageSize", fmt.Sprintf("%v", *config.PageSize))
@@ -67,7 +68,7 @@ func (service *Service) Locations(config *LocationsConfig) (*[]Location, *errort
 	var locations []Location
 
 	for {
-		url := fmt.Sprintf("https://mybusinessbusinessinformation.googleapis.com/v1/accounts/%s/locations?%s", config.Account, values.Encode())
+		url := fmt.Sprintf("https://mybusinessbusinessinformation.googleapis.com/v1/%s/locations?%s", config.AccountName, values.Encode())
 
 		locationsReponse := LocationsResponse{}
 

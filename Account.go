@@ -1,6 +1,7 @@
 package googlebusinessprofile
 
 import (
+	"fmt"
 	"net/http"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
@@ -34,4 +35,21 @@ func (service *Service) Accounts() (*[]Account, *errortools.Error) {
 	}
 
 	return &accountsReponse.Accounts, nil
+}
+
+func (service *Service) Account(accountName string) (*Account, *errortools.Error) {
+	var account Account
+
+	requestConfig := go_http.RequestConfig{
+		Method:        http.MethodGet,
+		Url:           fmt.Sprintf("https://mybusinessaccountmanagement.googleapis.com/v1/%s", accountName),
+		ResponseModel: &account,
+	}
+
+	_, _, e := service.googleService.HttpRequest(&requestConfig)
+	if e != nil {
+		return nil, e
+	}
+
+	return &account, nil
 }
